@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Student Result</title>
+     <link rel="stylesheet" type="text/css" href="d.css">
+</head>
+
+<body>
+<CENTER><h2>Student Result</h2></CENTER>
+    <table border="2">
+        <tr>
+            <td>
+                <form onsubmit="event.preventDefault();onFormSubmit();" autocomplete="off">
+                 <center><h2>Student Form</h2> </center>
+                    <div>
+                        <label>Subject Id</label>
+                        <label class="validation-error hide" id="idvalidationError">This field is required</label>
+                        <input type="text" name="Name" id="id" placeholder="Subject Id">
+                    </div>
+                    <div>
+                        <label>Subject Name</label>
+                        <label class="validation-error hide" id="namevalidationError" >This field is required</label>
+                        <input type="text" name="name" id="name" placeholder="Subject Name">
+                    </div>
+                    <div>
+                        <label>Marks</label>
+                        <label class="validation-error hide" id="marksvalidationError">This field is required</label>
+                        <input type="number" name="marks" id="marks" placeholder="Marks">
+                    </div>
+                    <div>
+                        <label>Total Marks</label>
+                        <label class="validation-error hide" id="tmarksvalidationError">This field is required</label>
+                        <input type="number" name="tmarks" id="tmarks" placeholder="Total Marks">
+                    </div>
+                    
+                    <div class="form-action-buttons">
+                        <input type="submit" value="Submit">
+                    </div>
+                </form>
+            </td>
+            <td>
+                <div class="a1">
+                    <table class="list" id="stdlist" border="2">
+                       <CENTER><h2>Result Records</h2></CENTER>
+                        <tr>
+                            <th>Subject Id</th>
+                            <th>Subject Name</th>
+                            <th>Marks</th>
+                            <th>Total Marks</th>
+                            <th>Percentage</th>
+                            <th>Grade</th>
+                            <th>Action</th>
+                        </tr>                    
+                    
+                </table>
+                <br>
+                <br>
+                <h2>Result:</h2>
+                <table border="2" id="table2">
+                    <tbody>
+                        <tr>
+                        <th>Grade :</th>
+                        <th id="mainper">Percentage :</th>
+                        <th>Pass.fail</th>
+                    </tr>
+                    </tbody>
+                </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <script>
+       var selectedRow = null;
+       var count=0;
+       var mainmarks=0;
+       var maintotalmarks=0;
+       var mainper=0;
+       var deletedata=0;
+       var rownumber=count;
+
+        function onFormSubmit(){
+            
+            if (validate()) {
+                count=count+1;
+                mainper=maintotalmarks/count;
+                var formData = readFormData();
+                if (selectedRow == null)
+                {
+                    insertNewRecord(formData);
+                    insertNewRecord1();
+                    //onDelete1(deletedata);
+                }
+                else
+                {
+                    updateRecord(formData);
+                    //updateRecord(table2);
+                }
+                resetForm();
+            }
+        }
+
+        function readFormData(){
+            var formData = {},z="",grade=0;
+            formData["id"] = document.getElementById("id").value;
+            formData["name"] = document.getElementById("name").value;
+            formData["marks"] = parseInt(document.getElementById("marks").value);
+            formData["tmarks"] = parseInt(document.getElementById("tmarks").value);
+            //formData["mainper"] = parseInt(document.getElementById("mainper").value);
+            // formData["grade"] = parseInt(document.getElementById("grade").value);
+            
+            return formData;
+        }
+        function insertNewRecord(data) {
+            var table = document.getElementById("stdlist").getElementsByTagName('tbody')[0];
+            var newRow = table.insertRow(table.length);
+            
+            cell1 = newRow.insertCell(0);
+            cell1.innerHTML = data.id;
+            cell2 = newRow.insertCell(1);
+            cell2.innerHTML = data.name;
+            cell3 = newRow.insertCell(2);
+            cell3.innerHTML = data.marks;
+            mainmarks=mainmarks+data.marks;
+            cell4 = newRow.insertCell(3);
+            cell4.innerHTML = data.tmarks;
+            maintotalmarks=maintotalmarks+data.tmarks;
+            cell5 = newRow.insertCell(4);
+            var mainper=data.marks/data.tmarks*100;
+            cell5.innerHTML = mainper.toFixed(2);
+            cell6 = newRow.insertCell(5);
+
+            if(mainper > 90)
+                {
+                    cell6.innerHTML = "A+";
+                }
+                else if(data.marks > 75 && data.marks <= 90)
+                {
+                    cell6.innerHTML = "A";
+                }
+                else if(data.marks > 65 && data.marks <= 75)
+                {
+                    cell6.innerHTML  = "B+";
+                }
+                else if(data.marks > 55 && data.marks <= 65)
+                {
+                    cell6.innerHTML  = "B";
+                }
+                else if(data.marks > 45 && data.marks <= 55)
+                {
+                    cell6.innerHTML  = "C";
+                }
+                else if(data.marks >35 && data.marks <= 45)
+                {
+                    cell6.innerHTML  = "D";
+                }
+                else
+                {
+                    cell6.innerHTML  = "E";
+                }
+            cell7 = newRow.insertCell(6);
+            cell7.innerHTML = `<a onClick="onEdit(this)">Edit</a>
+            <a onClick="onDelete(this)">Delete</a>`;
+        }
+
+        function insertNewRecord1() {
+            var table = document.getElementById("table2").getElementsByTagName('tbody')[0];
+            if (rownumber==count-0) {
+        }
+        else{
+            var newRow = table.insertRow(table.length);
+        }
+            var newRow = table.insertRow(table.length);
+            var mainper=mainmarks/maintotalmarks*100;
+            cell1 = newRow.insertCell(0);
+            if(mainper > 90)
+                {
+                    cell1.innerHTML = "A+";
+                }
+                else if(mainper > 75 && mainper <= 90)
+                {
+                    cell1.innerHTML = "A";
+                }
+                else if(mainper > 65 && mainper <= 75)
+                {
+                    cell1.innerHTML  = "B+";
+                }
+                else if(mainper > 55 && mainper <= 65)
+                {
+                    cell1.innerHTML  = "B";
+                }
+                else if(mainper > 45 && mainper <= 55)
+                {
+                    cell1.innerHTML  = "C";
+                }
+                else if(mainper >35 && mainper <= 45)
+                {
+                    cell1.innerHTML  = "D";
+                }
+                else
+                {
+                    cell1.innerHTML  = "E";
+                }
+            cell2 = newRow.insertCell(1);
+            cell2.innerHTML = mainper.toFixed(2);
+            cell3 = newRow.insertCell(2);
+            if (mainper>35) {
+                cell3.innerHTML = "<font color=green>Pass</font>";
+            }
+            else
+            {
+                cell3.innerHTML = "<font color=red>Fail</font>";
+            }
+            deletedata=this;
+        }
+
+        function resetForm() {
+            document.getElementById("id").value = "";
+            document.getElementById("name").value = "";
+            document.getElementById("marks").value = "";
+            document.getElementById("tmarks").value = "";
+            // document.getElementById("per").value = "";
+            // document.getElementById("grade").value = "";
+            selectedRow = null;
+        }
+        function onEdit(td) {
+            selectedRow = td.parentElement.parentElement;
+            document.getElementById("id").value = selectedRow.cells[0].innerHTML;
+            document.getElementById("name").value = selectedRow.cells[1].innerHTML;
+            document.getElementById("marks").value = selectedRow.cells[2].innerHTML;
+            document.getElementById("tmarks").value = selectedRow.cells[3].innerHTML;
+            // document.getElementById("per").value = selectedRow.cells[4].innerHTML;
+            // document.getElementById("grade").value = selectedRow.cells[5].innerHTML;
+        }
+        
+        function updateRecord(formData) {
+            selectedRow.cells[0].innerHTML = formData.id;
+            selectedRow.cells[1].innerHTML = formData.name;
+            selectedRow.cells[2].innerHTML = formData.marks;
+            selectedRow.cells[3].innerHTML = formData.tmarks;
+            //selectedRow.cells[4].innerHTML = formData.grade;
+            }
+
+        // function updateRecord(table2) {
+        //     selectedRow.cells[0].innerHTML = formData.grade;
+        //     selectedRow.cells[1].innerHTML = formData.mainper;
+        //     selectedRow.cells[2].innerHTML = formData.marks;
+        //     //selectedRow.cells[3].innerHTML = formData.tmarks;
+        //     //selectedRow.cells[4].innerHTML = formData.grade;
+        // }
+
+        function onDelete(td) {
+            if (confirm('Are you sure to delete this record ?')) {
+                row = td.parentElement.parentElement;
+                document.getElementById("stdlist").deleteRow(row.rowIndex);
+                resetForm();
+            }
+        }
+        
+         function onDelete1(td) {
+                row = td.parentElement.parentElement;
+                document.getElementById("table2").deleteRow(row.rowIndex);
+                resetForm();
+        }
+        
+        function validate() {
+            isValid = true;
+            if (document.getElementById("id").value == "") {
+                isValid = false;
+                document.getElementById("idvalidationError").classList.remove("hide");
+            } else {
+                isValid = true;
+                if (!document.getElementById("idvalidationError").classList.contains("hide"))
+                {
+                    document.getElementById("idvalidationError").classList.add("hide");
+                }
+            }
+            if (document.getElementById("name").value == "") {
+                isValid = false;
+                document.getElementById("namevalidationError").classList.remove("hide");
+            } else {
+                isValid = true;
+                if (!document.getElementById("namevalidationError").classList.contains("hide"))
+                {
+                    document.getElementById("namevalidationError").classList.add("hide");
+                }
+            }
+            if (document.getElementById("marks").value == "") {
+                isValid = false;
+                document.getElementById("marksvalidationError").classList.remove("hide");
+            } else {
+                isValid = true;
+                if (!document.getElementById("marksvalidationError").classList.contains("hide"))
+                {
+                    document.getElementById("marksvalidationError").classList.add("hide");
+                }
+            }
+            if (document.getElementById("tmarks").value == "") {
+                isValid = false;
+                document.getElementById("tmarksvalidationError").classList.remove("hide");
+            } else {
+                isValid = true;
+                if (!document.getElementById("tmarksvalidationError").classList.contains("hide"))
+                {
+                    document.getElementById("tmarksvalidationError").classList.add("hide");
+                }
+            }
+            return isValid;
+        }
+   </script>
+    
+</body>
+</html>
